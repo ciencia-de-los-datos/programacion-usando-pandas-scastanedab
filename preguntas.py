@@ -178,8 +178,9 @@ def pregunta_10():
     dataf = pd.DataFrame({'_c2': (tbl0.groupby('_c1')['_c2'])})
     datafC1 = pd.DataFrame({'_c1': dataf['_c2'].map(lambda x: x[0])})
     datafC2 = pd.DataFrame({'_c2': dataf['_c2'].map(lambda x: ':'.join(map(str,sorted(x[1]))))})
-    
-    return pd.concat([datafC1,datafC2],axis=1)
+    data10 = pd.concat([dataf1,dataf2],axis=1)
+    data10.set_index('_c1', inplace = True)
+    return data10
 
 
 def pregunta_11():
