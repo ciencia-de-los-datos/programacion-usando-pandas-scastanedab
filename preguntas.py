@@ -22,7 +22,7 @@ def pregunta_01():
     40
 
     """
-    return
+    return len(tbl0.index)
 
 
 def pregunta_02():
@@ -33,7 +33,7 @@ def pregunta_02():
     4
 
     """
-    return
+    return len(tbl0.columns)
 
 
 def pregunta_03():
@@ -50,7 +50,7 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    return tbl0['_c1'].value_counts().sort_index()
 
 
 def pregunta_04():
@@ -65,7 +65,7 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    return tbl0.groupby('_c1')['_c2'].mean()
 
 
 def pregunta_05():
@@ -82,7 +82,7 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    return tbl0.groupby('_c1')['_c2'].max()
 
 
 def pregunta_06():
@@ -94,7 +94,11 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    list_u = sorted(tbl1["_c4"].unique())
+
+    list_u = [x.upper() for x in list_u]
+    
+    return list_u
 
 
 def pregunta_07():
@@ -110,7 +114,7 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    return tbl0.groupby('_c1')['_c2'].sum()
 
 
 def pregunta_08():
@@ -128,7 +132,11 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    tbl0_sum = tbl0.copy()
+
+    tbl0_sum["suma"] = tbl0['_c0'] + tbl0['_c2']
+    
+    return tbl0_sum
 
 
 def pregunta_09():
@@ -146,7 +154,11 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    tbl0_año = tbl0.copy()
+
+    tbl0_año['year'] = tbl0_año['_c3'].map(lambda x: x.split('-')[0])
+    
+    return tbl0_año
 
 
 def pregunta_10():
@@ -163,7 +175,12 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    dataf = pd.DataFrame({'_c2': (tbl0.groupby('_c1')['_c2'])})
+    dataf1 = pd.DataFrame({'_c1': dataf['_c2'].map(lambda x: x[0])})
+    dataf2 = pd.DataFrame({'_c2': dataf['_c2'].map(lambda x: ':'.join(map(str,sorted(x[1]))))})
+    data10 = pd.concat([dataf1,dataf2],axis=1)
+    data10.set_index('_c1', inplace = True)
+    return data10
 
 
 def pregunta_11():
@@ -182,7 +199,11 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+    dataf11 = pd.DataFrame({'_c2': (tbl1.groupby('_c0')['_c4'])})
+    dataf_c0 = pd.DataFrame({'_c0': dataf11['_c2'].map(lambda x: x[0])})
+    dataf_c4 = pd.DataFrame({'_c4': dataf11['_c2'].map(lambda x: ','.join(map(str,sorted(x[1]))))})
+    
+    return pd.concat([dataf_c0,dataf_c4],axis=1)
 
 
 def pregunta_12():
@@ -200,7 +221,13 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    tbl2_copy = tbl2.copy()
+    tbl2_copy['col5ab'] = tbl2_copy['_c5a'].str.cat(tbl2_copy['_c5b'].astype(str),sep=':')
+    dataf12 = pd.DataFrame({'_c': (tbl2_copy.groupby('_c0')['col5ab'])})
+    dataf_c0 = pd.DataFrame({'_c0': dataf12['_c'].map(lambda x: x[0])})
+    dataf_c5 = pd.DataFrame({'_c5': dataf12['_c'].map(lambda x: ','.join(map(str,sorted(x[1]))))})
+    
+    return pd.concat([dataf_c0,dataf_c5],axis=1)
 
 
 def pregunta_13():
@@ -217,4 +244,9 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    table =pd.merge(
+    tbl0,
+    tbl2,
+    how="left")
+    
+    return table.groupby('_c1')['_c5b'].sum()
