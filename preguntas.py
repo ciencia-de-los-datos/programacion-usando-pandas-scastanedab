@@ -176,8 +176,8 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
     dataf = pd.DataFrame({'_c2': (tbl0.groupby('_c1')['_c2'])})
-    datafC1 = pd.DataFrame({'_c1': dataf['_c2'].map(lambda x: x[0])})
-    datafC2 = pd.DataFrame({'_c2': dataf['_c2'].map(lambda x: ':'.join(map(str,sorted(x[1]))))})
+    dataf1 = pd.DataFrame({'_c1': dataf['_c2'].map(lambda x: x[0])})
+    dataf2 = pd.DataFrame({'_c2': dataf['_c2'].map(lambda x: ':'.join(map(str,sorted(x[1]))))})
     data10 = pd.concat([dataf1,dataf2],axis=1)
     data10.set_index('_c1', inplace = True)
     return data10
